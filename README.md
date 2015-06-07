@@ -1,2 +1,3 @@
-# rosettastones
-Rosetta Stones
+# Rosetta Stones
+
+Encrypted text sharing project.
