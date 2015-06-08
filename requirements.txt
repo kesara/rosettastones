@@ -1,2 +1,5 @@
-Flask==0.10.1
-SQLAlchemy==1.0.4
+celery
+Flask
+rsa
+simple-crypt
+SQLAlchemy

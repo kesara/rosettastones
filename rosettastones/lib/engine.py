@@ -1,5 +1,5 @@
 ##############################################################################
-# app.py
+# engine.py
 # Rosetta Stones Web Application
 # 
 # Copyright (C) 2015 Kesara Rathnayake
@@ -18,20 +18,24 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-from flask import Flask, render_template
+from binascii import hexlify
+import hashlib
 
-app = Flask(__name__)
+from rsa import newkeys
+from simplecrypt import encrypt
 
-@app.route("/")
-def index():
-    """
-    Home page
-    """
-    return render_template("index.html")
+KEY_SIZE = 512
+HASHING = 'sha512'
+ENCODING = 'UTF-8'
 
-@app.route("/add")
-def add():
-    """
-    Insert a message
-    """
-    return render_template("add.html")
+def generate_keys():
+    (pub_key, pvt_key) = newkeys(KEY_SIZE)
+    pub_key = pub_key.save_pkcs1().decode(ENCODING)
+    pvt_key = pvt_key.save_pkcs1().decode(ENCODING)
+    enc_pvt_key = encrypt(pub_key, pvt_key)
+    return (pub_key, hexlify(enc_pvt_key))
+
+def get_hash(key):
+    hash = hashlib.new(HASHING)
+    hash.update(key)
+    return hash.hexdigest()
