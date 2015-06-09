@@ -28,15 +28,15 @@ body {
         <div class="row">
           <form>
             <div class="input-group col-md-12">
-              <textarea class="form-control" placeholder="Insert master key here. If you don't have one click the generate button." rows="3" ></textarea>
+              <textarea id="master_key" class="form-control" placeholder="Insert master key here. If you don't have one click the generate button." rows="3" ></textarea>
             </div>
             <br />
             <div class="input-group col-md-12">
-              <textarea class="form-control" placeholder="Insert public key here. If you don't have one click the generate button." rows="3" ></textarea>
+              <textarea id="public_key" class="form-control" placeholder="Insert public key here. If you don't have one click the generate button." rows="3" ></textarea>
             </div>
             <br />
             <div class="input-group col-md-12">
-              <button class="btn col-md-12" type="button">Generate</button>
+              <button id="generate" class="btn col-md-12" type="button" onclick="generate_keys();">Generate</button>
             </div>
             <br />
             <div class="input-group col-md-12">
@@ -52,6 +52,7 @@ body {
     </div>
     {% include "_footer.html" %}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="/static/js/gen_keys.js" type="text/javascript"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
   </body>
 </html>

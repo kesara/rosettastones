@@ -18,7 +18,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-from flask import Flask, render_template
+from flask import Flask, jsonify, render_template
+
+from rosettastones.lib.engine import generate_keys, get_hash
 
 app = Flask(__name__)
 
@@ -35,3 +37,14 @@ def add():
     Insert a message
     """
     return render_template("add.html")
+
+@app.route("/gen_keys", methods=["GET",])
+def generate():
+    """
+    Generate rosetta master key and public key
+    """
+    (pub_key, naked_master_key) = generate_keys()
+    master_key_hex = get_hash(naked_master_key)
+    return jsonify({
+        "public_key": pub_key,
+        "master_key": master_key_hex})
