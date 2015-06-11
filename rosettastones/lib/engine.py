@@ -1,7 +1,7 @@
 ##############################################################################
 # engine.py
 # Rosetta Stones Web Application
-# 
+#
 # Copyright (C) 2015 Kesara Rathnayake
 #
 # This program is free software: you can redistribute it and/or modify
@@ -31,6 +31,7 @@ HASHING = "sha512"
 ENCODING = "UTF-8"
 TEMP_DB = "temp.db"
 
+
 def generate_keys():
     """
     Generate key pair
@@ -41,6 +42,7 @@ def generate_keys():
     enc_pvt_key = encrypt(pub_key, pvt_key)
     return (pub_key, hexlify(enc_pvt_key))
 
+
 def get_hash(key):
     """
     Get hash value for a key.
@@ -48,6 +50,7 @@ def get_hash(key):
     hash = new_hash(HASHING)
     hash.update(key)
     return hash.hexdigest()
+
 
 @contextmanager
 def temp_db_connect():
@@ -60,6 +63,7 @@ def temp_db_connect():
         yield cursor
     finally:
         connection.close()
+
 
 def temp_store(id, key):
     """

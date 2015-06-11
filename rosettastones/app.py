@@ -1,7 +1,7 @@
 ##############################################################################
 # app.py
 # Rosetta Stones Web Application
-# 
+#
 # Copyright (C) 2015 Kesara Rathnayake
 #
 # This program is free software: you can redistribute it and/or modify
@@ -24,12 +24,14 @@ from rosettastones.lib.engine import generate_keys, get_hash, temp_store
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def index():
     """
     Home page
     """
     return render_template("index.html")
+
 
 @app.route("/add")
 def add():
@@ -38,7 +40,8 @@ def add():
     """
     return render_template("add.html")
 
-@app.route("/gen_keys", methods=["GET",])
+
+@app.route("/gen_keys", methods=["GET"])
 def generate():
     """
     Generate rosetta master key and public key
