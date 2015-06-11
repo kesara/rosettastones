@@ -20,7 +20,7 @@
 
 from flask import Flask, jsonify, render_template
 
-from rosettastones.lib.engine import generate_keys, get_hash
+from rosettastones.lib.engine import generate_keys, get_hash, temp_store
 
 app = Flask(__name__)
 
@@ -45,6 +45,7 @@ def generate():
     """
     (pub_key, naked_master_key) = generate_keys()
     master_key_hex = get_hash(naked_master_key)
+    temp_store(master_key_hex, naked_master_key)
     return jsonify({
         "public_key": pub_key,
         "master_key": master_key_hex})

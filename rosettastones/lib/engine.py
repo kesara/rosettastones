@@ -19,16 +19,22 @@
 ##############################################################################
 
 from binascii import hexlify
-import hashlib
+from contextlib import contextmanager
+from hashlib import new as new_hash
+from sqlite3 import connect as sqlite_conn
 
 from rsa import newkeys
 from simplecrypt import encrypt
 
 KEY_SIZE = 512
-HASHING = 'sha512'
-ENCODING = 'UTF-8'
+HASHING = "sha512"
+ENCODING = "UTF-8"
+TEMP_DB = "temp.db"
 
 def generate_keys():
+    """
+    Generate key pair
+    """
     (pub_key, pvt_key) = newkeys(KEY_SIZE)
     pub_key = pub_key.save_pkcs1().decode(ENCODING)
     pvt_key = pvt_key.save_pkcs1().decode(ENCODING)
@@ -36,6 +42,29 @@ def generate_keys():
     return (pub_key, hexlify(enc_pvt_key))
 
 def get_hash(key):
-    hash = hashlib.new(HASHING)
+    """
+    Get hash value for a key.
+    """
+    hash = new_hash(HASHING)
     hash.update(key)
     return hash.hexdigest()
+
+@contextmanager
+def temp_db_connect():
+    """
+    Connection to temporary database
+    """
+    connection = sqlite_conn(TEMP_DB)
+    cursor = connection.cursor()
+    try:
+        yield cursor
+    finally:
+        connection.close()
+
+def temp_store(id, key):
+    """
+    Store master key in temporary database.
+    """
+    with temp_db_connect() as c:
+        c.execute("""INSERT INTO keys VALUES(?, ?);""", (id, key))
+        c.connection.commit()
