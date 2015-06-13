@@ -23,12 +23,13 @@ from contextlib import contextmanager
 from hashlib import new as new_hash
 from sqlite3 import connect as sqlite_conn
 
-from rsa import newkeys
-from simplecrypt import encrypt
+from rsa import newkeys, encrypt as rsa_encrypt, PublicKey
+from simplecrypt import encrypt as simple_encrypt
 
 KEY_SIZE = 512
 HASHING = "sha512"
 ENCODING = "UTF-8"
+ISO_ENCODING = "ISO-8859-1"
 TEMP_DB = "temp.db"
 
 
@@ -39,7 +40,7 @@ def generate_keys():
     (pub_key, pvt_key) = newkeys(KEY_SIZE)
     pub_key = pub_key.save_pkcs1().decode(ENCODING)
     pvt_key = pvt_key.save_pkcs1().decode(ENCODING)
-    enc_pvt_key = encrypt(pub_key, pvt_key)
+    enc_pvt_key = simple_encrypt(pub_key, pvt_key)
     return (pub_key, hexlify(enc_pvt_key))
 
 
@@ -50,6 +51,15 @@ def get_hash(key):
     hash = new_hash(HASHING)
     hash.update(key)
     return hash.hexdigest()
+
+
+def encrypt(key, message):
+    """
+    Encrypt message with Public Key
+    """
+    public_key = PublicKey.load_pkcs1(key.encode(ENCODING))
+    enc_msg = rsa_encrypt(message.encode(ENCODING), public_key)
+    return enc_msg.decode(ISO_ENCODING)
 
 
 @contextmanager

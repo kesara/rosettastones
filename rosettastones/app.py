@@ -18,9 +18,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ##############################################################################
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 
-from rosettastones.lib.engine import generate_keys, get_hash, temp_store
+from rosettastones.lib.engine import (
+        generate_keys, get_hash, temp_store, encrypt)
 
 app = Flask(__name__)
 
@@ -33,12 +34,18 @@ def index():
     return render_template("index.html")
 
 
-@app.route("/add")
+@app.route("/add", methods=["GET", "POST"])
 def add():
     """
     Insert a message
     """
-    return render_template("add.html")
+    if request.method == "GET":
+        return render_template("add.html")
+    elif request.method == "POST":
+        public_key = request.form["public_key"]
+        message = request.form["message"]
+        return jsonify({
+            "encrypted_message": encrypt(public_key, message)})
 
 
 @app.route("/gen_keys", methods=["GET"])
